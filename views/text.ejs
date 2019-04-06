@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.1.1/socket.io.dev.js"></script>
+    <title>text socket</title>
+</head>
+<body>
+
+    <div id="mario-chat">
+        
+        <h2>sha256 text</h2>
+
+        <div id="chat-window">
+            <div id="output">
+                <p id="out"></p>
+            </div>
+            <div id="feedback"></div>
+        </div>
+        <input id="message" type="text" placeholder="Message" />
+
+        <a href="/"><button>back to home page</button></a>
+
+    <script>
+
+        var socket= io.connect('http://localhost:3000')
+
+        var message = document.getElementById('message'),
+            handle = document.getElementById('handle'),
+            btn = document.getElementById('send'),
+            output = document.getElementById('out'),
+            feedback = document.getElementById('feedback');
+
+        // Emit events
+        setInterval(()=>{
+            changed();
+        },500)
+
+        function changed(){
+            console.log(message.value)
+            socket.emit('chat', {
+                message: message.value,
+            });
+            
+            
+        }
+        
+
+        
+        socket.on('chat', function(data){
+            feedback.innerHTML = '';
+            output.innerHTML = '<p>the sha for the word: \''+data.message+'\' is '+ data.sha + '</p>';
+        });
+
+    </script>
+</body>
+</html>
